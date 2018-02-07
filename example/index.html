@@ -12,14 +12,16 @@
         <script src="../dist/js-error-handler.js"></script>
         <script type="text/javascript">
 
-            var Catchy = new JSErrorHandler({
+            var CatchyTheErrors = new JSErrorHandler({
                 ajaxURL: '',
                 extraParams: {userId: 12345, name: "Joel"},
                 onSaveError: function(error){
-                    alert(error);
+                    console.log(error);
                 },
+
+                // Do something when the save request completes
                 onSave: function(response) {
-                    alert("SAVED!");
+                    console.log(this.sessionStorageErrors);
                 }
 
             });
@@ -27,9 +29,12 @@
     </head>
     <body>
         <script type="text/javascript">
+        setTimeout(function(){
+            somethingelse();
+        }, 5000);
             setTimeout(function(){
-                asdads
-            }, 2000);
+somefunc();            }, 2000);
+
         </script>
     </body>
 </html>
