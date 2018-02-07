@@ -36,12 +36,14 @@ var JSErrorHandler = function JSErrorHandler(config) {
         },
         save: function save() {
             // Determine how to save
-            if (typeof jQuery != 'undefined') {
-                this.ajaxProvider = jQuery.post;
+            if (config.ajaxProvider && typeof config.ajaxProvider == 'function') {
+                this.ajaxProvider = config.ajaxProvider;
             } else if (typeof axios != "undefined") {
                 this.ajaxProvider = axios.post;
+            } else if (typeof jQuery != 'undefined' && jQuery.fn.jquery) {
+                this.ajaxProvider = jQuery.post;
             } else {
-                console.warn("No ajax provider found, please ensure jQuery or axios are included");
+                console.warn("JSErrorHandler - No ajax provider found, please ensure jQuery or axios are included");
             }
 
             if (typeof config.ajaxURL != 'undefined' && this.ajaxProvider) {
@@ -52,7 +54,11 @@ var JSErrorHandler = function JSErrorHandler(config) {
                 }
                 params.errors = this.errors;
 
-                this.ajaxProvider(this.config.ajaxURL, params).then(this.onSave.bind(this)).catch(this.onSaveError.bind(this));
+                try {
+                    this.ajaxProvider(this.config.ajaxURL, params).then(this.onSave.bind(this)).catch(this.onSaveError.bind(this));
+                } catch (err) {
+                    console.warn('JSErrorHandler - ajaxProvider is not a real Promise, not able to save errors.');
+                }
             }
 
             if (typeof sessionStorage != 'undefined') {

@@ -32,6 +32,7 @@ var MyErrorHandler = new JSErrorHandler();
 // Initiate Error Handler with options
 var MyErrorHandler = new JSErrorHandler({
     ajaxURL:     '',
+    ajaxProvider: axios.post, // $.post
     extraParams: {},
     onSaveError: function(error){ … },
     onSave:      function(response){ … }
@@ -41,6 +42,31 @@ var MyErrorHandler = new JSErrorHandler({
 
 #### ajaxURL (string)
 The url to post the error to, without this, it will not attempt to save over ajax. Remember, if you include this option you must be including either `axios` or `jQuery` for it to work.
+
+#### ajaxProvider (function)
+By default, the error handler will look for axios.post or jQuery.post However, this will only work with jquery 1.5+. If this is not possible for you, you can set the ajaxProvider in the config.
+
+The ajaxProvider MUST return a Promise so `.then` and `.catch` can run on it. You could do something like so;
+
+```js
+ajaxProvider: myAxios.post
+```
+
+```js
+// This only works in jQuery 1.5+ where promises are returned
+ajaxProvider: customjQueryVariable.post
+```
+
+```js
+ajaxProvider: new Promise(function(url, data){
+    ...
+});
+```
+
+If the ajaxProvider does not have the correct methods it will not save and you may see a warning in the console;
+![](http://c.dayjo.me/29242R2z3a0l/Image%202018-02-07%20at%201.08.02%20pm.png)
+
+
 
 #### extraParams (object)
 An object of extra parameters to send with the ajax requests, useful for sending user identifying information i.e;
