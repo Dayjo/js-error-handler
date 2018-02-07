@@ -3,7 +3,7 @@
 Simple script to handle js errors and send them server-side for your perusal. It catches errors and optionally sends them to your server via ajax. It stores all errors in the browsers [sessionStorage](https://developer.mozilla.org/en-US/docs/Web/API/Window/sessionStorage) making them available to your JS app too.
 
 
-__Note:__ This library has no included dependencies. If you want the AJAX posting to work, you'll need to be including either `jQuery` or `axios`. It looks for either `$.post` or `axios.post` to send the data.
+__Note:__ This library has no included dependencies. If you want the AJAX posting to work, you'll need to be including either `jQuery` or `axios`. It looks for either `jQuery.post` or `axios.post` to send the data.
 
 ------
 
