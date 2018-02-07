@@ -43,7 +43,7 @@ var JSErrorHandler = function JSErrorHandler(config) {
             } else if (typeof jQuery != 'undefined' && jQuery.fn.jquery) {
                 this.ajaxProvider = jQuery.post;
             } else {
-                console.warn("JSErrorHandler - No ajax provider found, please ensure jQuery or axios are included");
+                console.warn("JSErrorHandler: No ajax provider found, please ensure jQuery or axios are included");
             }
 
             if (typeof config.ajaxURL != 'undefined' && this.ajaxProvider) {
@@ -57,7 +57,7 @@ var JSErrorHandler = function JSErrorHandler(config) {
                 try {
                     this.ajaxProvider(this.config.ajaxURL, params).then(this.onSave.bind(this)).catch(this.onSaveError.bind(this));
                 } catch (err) {
-                    console.warn('JSErrorHandler - ajaxProvider is not a real Promise, not able to save errors.');
+                    console.warn('JSErrorHandler: ajaxProvider is not a real Promise, not able to save errors.');
                 }
             }
 
