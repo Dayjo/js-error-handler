@@ -9,6 +9,7 @@ var JSErrorHandler = function JSErrorHandler(config) {
 
     var errorHandler = {
         errors: [],
+        ajaxProvider: null,
         sessionStorageErrors: [],
         config: config,
 
@@ -19,18 +20,12 @@ var JSErrorHandler = function JSErrorHandler(config) {
             var self = this;
             window.addEventListener('error', function (e) {
                 var err = JSON.parse(JSON.stringify(e, ['message', 'filename', 'lineno', 'colno', 'error']));
+                err.timestamp = Date.now();
                 self.errors.push(err);
                 self.sessionStorageErrors.push(err);
 
                 self.save();
             });
-
-            // Determine how to save
-            if (typeof jQuery != 'undefined') {
-                this.ajaxProvider = $.post;
-            } else if (typeof axios != "undefined") {
-                this.ajaxProvider = axios.post;
-            }
 
             if (typeof sessionStorage != 'undefined') {
                 var jsErrors = sessionStorage.getItem('jsErrors');
@@ -40,7 +35,16 @@ var JSErrorHandler = function JSErrorHandler(config) {
             }
         },
         save: function save() {
-            if (typeof config.ajaxURL != 'undefined') {
+            // Determine how to save
+            if (typeof jQuery != 'undefined') {
+                this.ajaxProvider = jQuery.post;
+            } else if (typeof axios != "undefined") {
+                this.ajaxProvider = axios.post;
+            } else {
+                console.warn("No ajax provider found, please ensure jQuery or axios are included");
+            }
+
+            if (typeof config.ajaxURL != 'undefined' && this.ajaxProvider) {
 
                 var params = {};
                 if (this.config.extraParams) {
@@ -61,19 +65,13 @@ var JSErrorHandler = function JSErrorHandler(config) {
                 this.config.onSave.call(this, response);
             }
 
-            if (this.config.clearOnSave) {
-                this.errors = [];
-            }
-
-            console.log(response);
+            this.errors = [];
         },
 
         onSaveError: function onSaveError(response) {
             if (typeof this.config.onSaveError == 'function') {
-                this.config.onSaveError(response);
+                this.config.onSaveError.call(this, response);
             }
-
-            console.log(response);
         }
 
     };

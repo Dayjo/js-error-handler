@@ -26,13 +26,7 @@ var JSErrorHandler = function(config){
 
             });
 
-            // Determine how to save
-            if ( typeof jQuery != 'undefined' ) {
-                this.ajaxProvider = $.post;
-            }
-            else if ( typeof axios != "undefined" ) {
-                this.ajaxProvider = axios.post;
-            }
+
 
             if ( typeof sessionStorage != 'undefined' ) {
                 let jsErrors = sessionStorage.getItem('jsErrors');
@@ -42,6 +36,17 @@ var JSErrorHandler = function(config){
             }
         },
         save: function() {
+            // Determine how to save
+            if ( typeof jQuery != 'undefined' ) {
+                this.ajaxProvider = jQuery.post;
+            }
+            else if ( typeof axios != "undefined" ) {
+                this.ajaxProvider = axios.post;
+            }
+            else {
+                console.warn("No ajax provider found, please ensure jQuery or axios are included");
+            }
+
             if ( typeof config.ajaxURL != 'undefined' && this.ajaxProvider ) {
 
                 let params = {};
@@ -62,7 +67,7 @@ var JSErrorHandler = function(config){
             if (typeof this.config.onSave == 'function' ){
                 this.config.onSave.call(this, response);
             }
-            
+
             this.errors = [];
         },
 
