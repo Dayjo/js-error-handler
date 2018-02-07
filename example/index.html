@@ -10,6 +10,9 @@
 
         </script>
         <script src="../dist/js-error-handler.js"></script>
+
+    </head>
+    <body>
         <script type="text/javascript">
 
             var CatchyTheErrors = new JSErrorHandler({
@@ -26,15 +29,13 @@
 
             });
         </script>
-    </head>
-    <body>
         <script type="text/javascript">
-        setTimeout(function(){
-            somethingelse();
-        }, 5000);
             setTimeout(function(){
-somefunc();            }, 2000);
-
+                someunknownfunc();
+            }, 2000);
+            setTimeout(function(){
+                anotherunknownfunc();
+            }, 5000);
         </script>
     </body>
 </html>

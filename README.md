@@ -11,7 +11,7 @@ __Note:__ This library has no included dependencies. If you want the AJAX postin
 Simply include the js-error-handler.js in your web page. It's avaialable using jsDelivr;
 
 ```html
-<script src="https://cdn.jsdelivr.net/gh/pallant/js-error-handler/dist/js-error-handler.min.js"></script>
+<script src="https://cdn.jsdelivr.net/npm/js-error-handler/dist/js-error-handler.min.js"></script>
 ```
 
 Then intialise and configure it;
