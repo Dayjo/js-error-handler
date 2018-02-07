@@ -17,11 +17,14 @@ var JSErrorHandler = function(config){
         init: function() {
             var self = this;
             window.addEventListener('error', function(e){
-                let err = JSON.parse(JSON.stringify(e, ['message', 'filename', 'lineno', 'colno', 'error']));
+                let err = JSON.parse(JSON.stringify(e, ['message', 'filename', 'lineno', 'colno']));
+                err.error = {
+                    message: e.error.message,
+                    stack: e.error.stack
+                };
                 err.timestamp = Date.now();
                 self.errors.push(err);
                 self.sessionStorageErrors.push(err);
-
                 self.save();
 
             });
