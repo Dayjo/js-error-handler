@@ -20,13 +20,8 @@ var JSErrorHandler = function JSErrorHandler(config) {
             var self = this;
             window.addEventListener('error', function (e) {
                 var err = JSON.parse(JSON.stringify(e, ['message', 'filename', 'lineno', 'colno']));
-                err.error = {
-                    message: e.error.message,
-                    stack: e.error.stack
-                };
+                err.stack = e.error.stack;
                 err.timestamp = Date.now();
-
-                console.log(err);
                 self.errors.push(err);
                 self.sessionStorageErrors.push(err);
                 self.save();
