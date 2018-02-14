@@ -75,11 +75,32 @@ An object of extra parameters to send with the ajax requests, useful for sending
 extraParams: { userId: 12345 }
 ```
 
+#### onError (function)
+Callback function that runs when an error occurs. This fires before the saving happens.
+
+```js
+onError: function(err) {
+    // handle err
+}
+```
+
 #### onSaveError (function)
 Callback function that runs when the ajax request fails. Passes one parameter to the callback which is the error that was thrown so it can be handled some other way (It should still be in session storage at this point).
 
+```js
+onSaveError: function(err) {
+    // Ajax save failed so handle it
+}
+```
+
 #### onSave (function)
 Callback function that runs when the save request was successful. The only parameter passed to function is the response from the ajax request.
+
+```js
+onSave: function(err) {
+    // Ajax request to save the error was successful
+}
+```
 
 ------
 

@@ -22,8 +22,15 @@ var JSErrorHandler = function JSErrorHandler(config) {
                 var err = JSON.parse(JSON.stringify(e, ['message', 'filename', 'lineno', 'colno']));
                 err.stack = e.error.stack;
                 err.timestamp = Date.now();
+
                 self.errors.push(err);
                 self.sessionStorageErrors.push(err);
+
+                // If there's an onError callback, call it
+                if (typeof self.config.onError == 'function') {
+                    self.config.onError.call(self, err);
+                }
+
                 self.save();
             });
 
@@ -34,6 +41,10 @@ var JSErrorHandler = function JSErrorHandler(config) {
                 }
             }
         },
+
+        /**
+         * Save the errors
+         */
         save: function save() {
             // Determine how to save
             if (this.config.ajaxProvider && typeof this.config.ajaxProvider == 'function') {
@@ -66,6 +77,11 @@ var JSErrorHandler = function JSErrorHandler(config) {
             }
         },
 
+        /**
+         * The onSave callback, runs if the error ajax request was successful
+         * @param  {Object} response The response from the ajax request
+         * @return {void}
+         */
         onSave: function onSave(response) {
             if (typeof this.config.onSave == 'function') {
                 this.config.onSave.call(this, response);
@@ -74,6 +90,11 @@ var JSErrorHandler = function JSErrorHandler(config) {
             this.errors = [];
         },
 
+        /**
+         * The onSaveError callback, runs if the ajax request failed
+         * @param  {Object} response The response from the server
+         * @return {void}
+         */
         onSaveError: function onSaveError(response) {
             if (typeof this.config.onSaveError == 'function') {
                 this.config.onSaveError.call(this, response);
@@ -82,6 +103,9 @@ var JSErrorHandler = function JSErrorHandler(config) {
 
     };
 
+    /**
+     * Initialise the handler
+     */
     errorHandler.init();
     return errorHandler;
 };
