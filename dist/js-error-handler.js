@@ -2,7 +2,7 @@
 
 /**
  * JS Error Handler
- * Catches javascript errors in your app. Stores them in sessionStorage,
+ * Catches javascript errors in your app.
  * immediately reports error to an ajax url
  */
 var JSErrorHandler = function JSErrorHandler(config) {
@@ -10,7 +10,6 @@ var JSErrorHandler = function JSErrorHandler(config) {
     var errorHandler = {
         errors: [],
         ajaxProvider: null,
-        sessionStorageErrors: [],
         config: config,
 
         /**
@@ -23,8 +22,9 @@ var JSErrorHandler = function JSErrorHandler(config) {
                 err.stack = e.error.stack;
                 err.timestamp = Date.now();
 
+                // Look through the errors array to see if we have already done this one
+                self.errors.indexOf(err);
                 self.errors.push(err);
-                self.sessionStorageErrors.push(err);
 
                 // If there's an onError callback, call it
                 if (typeof self.config.onError == 'function') {
@@ -33,13 +33,6 @@ var JSErrorHandler = function JSErrorHandler(config) {
 
                 self.save();
             });
-
-            if (typeof sessionStorage != 'undefined') {
-                var jsErrors = sessionStorage.getItem('jsErrors');
-                if (jsErrors) {
-                    this.sessionStorageErrors = JSON.parse(jsErrors);
-                }
-            }
         },
 
         /**
@@ -70,10 +63,6 @@ var JSErrorHandler = function JSErrorHandler(config) {
                 } catch (err) {
                     console.warn('JSErrorHandler: ajaxProvider is not a real Promise, not able to save errors.', err);
                 }
-            }
-
-            if (typeof sessionStorage != 'undefined') {
-                sessionStorage.setItem('jsErrors', JSON.stringify(this.sessionStorageErrors));
             }
         },
 

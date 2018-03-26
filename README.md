@@ -1,7 +1,6 @@
 # JS Error Handler
 
-Simple script to handle js errors and send them server-side for your perusal. It catches errors and optionally sends them to your server via ajax. It stores all errors in the browsers [sessionStorage](https://developer.mozilla.org/en-US/docs/Web/API/Window/sessionStorage) making them available to your JS app too.
-
+Simple script to handle js errors and send them server-side for your perusal. It catches errors and optionally sends them to your server via ajax.
 
 __Note:__ This library has no included dependencies. If you want the AJAX posting to work, you'll need to be including either `jQuery` or `axios`. It looks for either `jQuery.post` or `axios.post` to send the data.
 
@@ -81,11 +80,12 @@ Callback function that runs when an error occurs. This fires before the saving h
 ```js
 onError: function(err) {
     // handle err
+    // Save to your app local storage or something
 }
 ```
 
 #### onSaveError (function)
-Callback function that runs when the ajax request fails. Passes one parameter to the callback which is the error that was thrown so it can be handled some other way (It should still be in session storage at this point).
+Callback function that runs when the ajax request fails. Passes one parameter to the callback which is the error that was thrown so it can be handled some other way.
 
 ```js
 onSaveError: function(err) {
@@ -104,8 +104,12 @@ onSave: function(err) {
 
 ------
 
-## Programatically access errors array
-You can access the array of errors that have occured for a user over their browser session by accessing the `.sessionStorageErrors` property on your error handler object. This might be useful within the callback functions i.e.
+## Programatically access errors
+Previously the library stored the errors into sessionStorage, but to reduce dependencies and complexity this is no longer the case.
+
+However you can still handle this yourself if you need to be able to store all errors locally using the `onError` callback.
+
+You can access the array of errors that have occurred on the current page for a user by accessing the `.errors` property on your error handler object. This might be useful within the callback functions i.e.
 
 ```html
 <script>
@@ -114,8 +118,8 @@ var MyErrorHandler = new JSErrorHandler({
     ajaxURL:     '/errors',
     onSaveError: function(error){
 
-        // Failed to save, so do something with the errors
-        console.log(this.sessionStorageErrors);
+        // Failed to save, so do something else with the errors
+        console.log(this.errors);
 
     },
 });
