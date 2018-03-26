@@ -1,6 +1,6 @@
 {
   "name": "js-error-handler",
-  "version": "0.0.8",
+  "version": "0.1.0",
   "description": "JS library for simply handling and recording js errors",
   "main": "dist/js-error-handler.js",
   "repository": "git@github.com:pallant/js-error-handler.git",
