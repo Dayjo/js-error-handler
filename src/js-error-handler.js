@@ -18,11 +18,23 @@ var JSErrorHandler = function(config){
             window.addEventListener('error', function(e){
                 let err = JSON.parse(JSON.stringify(e, ['message', 'filename', 'lineno', 'colno']));
                 err.stack = e.error.stack;
+                err.occurrences = 1;
                 err.timestamp = Date.now();
 
-                // Look through the errors array to see if we have already done this one
-                self.errors.indexOf(err);
-                self.errors.push(err);
+                // Look through the errors array to see if we have already caught this one
+                // if we have, just iterate a count of occurrences
+                let exists = self.errors.map(function(e) {
+                    return e.message + e.filename + e.lineno;
+                }).indexOf( err.message + err.filename + err.lineno);
+
+                // If it exists, add an occurrences count to the existing one
+                if ( exists > -1 ) {
+                    self.errors[exists].occurrences = parseInt(self.errors[exists].occurrences) + 1;
+                }
+                // Otherwise add it to the array
+                else {
+                    self.errors.push(err);
+                }
 
                 // If there's an onError callback, call it
                 if (typeof self.config.onError == 'function' ){
