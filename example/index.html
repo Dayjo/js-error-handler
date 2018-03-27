@@ -10,29 +10,38 @@
 
     </head>
     <body>
+
+        <h1>Click anywhere to throw an error</h1>
         <script type="text/javascript">
 
             var CatchyTheErrors = new JSErrorHandler({
                 ajaxURL: '',
                 extraParams: {userId: 12345, name: "Joel"},
+
+                // If the ajax request fails
                 onSaveError: function(error){
-                    console.log(error);
+                    console.log("We failed to save the error!", error);
                 },
 
                 // Do something when the save request completes
                 onSave: function(response) {
+                    console.log("Error saved!", this.errors);
+                },
+
+                // When an error occurs, output a message
+                onError: function(error){
+                    console.error("SPECIAL ERROR OCCURED");
                     console.log(this.errors);
                 }
 
             });
         </script>
         <script type="text/javascript">
-            setTimeout(function(){
+
+            document.addEventListener('click', function(e){
                 someunknownfunc();
-            }, 2000);
-            setTimeout(function(){
-                anotherunknownfunc();
-            }, 5000);
+            });
+
         </script>
     </body>
 </html>
